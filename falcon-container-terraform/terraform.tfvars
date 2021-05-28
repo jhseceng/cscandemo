@@ -9,7 +9,7 @@
 falcon_client_id = ""
 falcon_client_secret = ""
 falcon_cid = ""
-falcon_cloud = ""
+falcon_cloud = "us-1"
 project_id = ""
 
 

@@ -42,7 +42,7 @@ env_up() {
   terraform apply -compact-warnings \
     -var falcon_client_id="$CLIENT_ID" -var falcon_client_secret="$CLIENT_SECRET" \
     -var falcon_cid="$CLIENT_CID" \
-    -var project_id="$TF_VAR_project_id" -var falcon_cloud=$FALCON_CLOUD--auto-approve
+    -var project_id="$TF_VAR_project_id" -var falcon_cloud="us-1" --auto-approve
 
   cat <<__END__
 
