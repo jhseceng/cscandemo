@@ -6,10 +6,11 @@
 # Do not store secrets here Use environment variables instead
 # Example:   export TF_VAR_falcon_client_id="ASDF123"
 
-# falcon_client_id = ""
-# falcon_client_secret = ""
-# falcon_client_secret = ""
-# falcon_cid = ""
+falcon_client_id = ""
+falcon_client_secret = ""
+falcon_cid = ""
+falcon_cloud = ""
+project_id = ""
 
 
 

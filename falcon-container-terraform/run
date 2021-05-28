@@ -7,7 +7,7 @@
 #   3) Verify that your identity in upper right corner is correct)
 #   4) Paste the following to your cloud shell
 #
-#          bash -c 'source <(curl -s https://raw.githubusercontent.com/crowdstrike/cloud-gcp/main/falcon-container-terraform/run)'
+#          bash -c 'source <(curl -s https://raw.githubusercontent.com/crowdstrike/cloud-gcp/main/falcon-container-terraform/demo.sh)'
 #
 #
 
