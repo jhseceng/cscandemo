@@ -42,7 +42,7 @@ env_up() {
   terraform apply -compact-warnings \
     -var falcon_client_id="$CLIENT_ID" -var falcon_client_secret="$CLIENT_SECRET" \
     -var falcon_cid="$CLIENT_CID" \
-    -var project_id="$UNIQUE_ID" -var falcon_cloud= --auto-approve
+    -var project_id="$TF_VAR_project_id" -var falcon_cloud=$FALCON_CLOUD--auto-approve
 
   cat <<__END__
 
@@ -56,25 +56,6 @@ env_up() {
 
 __END__
   sleep 10
-
-  ssh_key=$HOME/.ssh/container_lab_ssh_key
-  if ! [ -f "$ssh_key" ]; then
-    ssh-keygen -t rsa -b 1024 -N '' -f "$ssh_key"
-    gcloud compute config-ssh --ssh-key-file="$ssh_key"
-  fi
-  $(terraform output admin_access | tr -d '"')
-
-  terraform -chdir=terraform init
-  echo -e "$LB\n"
-  echo -e "Standing up environment$NC"
-  terraform -chdir=terraform apply -compact-warnings \
-    -var falcon_client_id="$CLIENT_ID" -var falcon_client_secret="$CLIENT_SECRET" \
-    -var falcon_client_cid="$CLIENT_CID" -var owner="$OWNER_ID" -var trusted_ip="$TRUSTED_IP" \
-    -var unique_id="$UNIQUE_ID" $BASE --auto-approve
-
-  echo -e "$DG\n"
-  echo -e "Pausing for 60 seconds to allow configurations to settle$NC"
-  sleep 60
   all_done
 }
 env_down() {
@@ -120,14 +101,11 @@ if [[ "$1" == "up" || "$1" == "reload" ]]; then
     if [[ "$arg" == *--client_cid=* ]]; then
       CLIENT_CID=${arg/--client_cid=/}
     fi
-    if [[ "$arg" == *--unique_id=* ]]; then
-      UNIQUE_ID=${arg/--unique_id=/}
+    if [[ "$arg" == *--project_id=* ]]; then
+      PROJECT_ID=${arg/--project_id=/}
     fi
-    if [[ "$arg" == *--trusted=* ]]; then
-      TRUSTED_IP="${arg/--trusted=/}"
-    fi
-    if [[ "$arg" == *--baseurl=* ]]; then
-      BASE_URL="${arg/--baseurl=/}"
+    if [[ "$arg" == *--cloud=* ]]; then
+      FALCON_CLOUD="${arg/--cloud=/}"
     fi
   done
   if [ -z "$CLIENT_ID" ]; then
@@ -139,16 +117,11 @@ if [[ "$1" == "up" || "$1" == "reload" ]]; then
   if [ -z "$CLIENT_CID" ]; then
     read -p "Falcon API Client CCID: " CLIENT_CID
   fi
-  if [ -z "$UNIQUE_ID" ]; then
-    read -p "Unique Identifier: " UNIQUE_ID
+  if [ -z "$PROJECT_ID" ]; then
+    read -p "Google Project ID: " PROJECT_ID
   fi
-  if [ -z "$TRUSTED_IP" ]; then
-    read -p "Your external IP Address (for SSH connection, CIDR format): " TRUSTED_IP
-  fi
-  if [ -z "$BASE_URL" ]; then
-    BASE=""
-  else
-    BASE=" -var falcon_base_url='$BASE_URL'"
+  if [ -z "$FALCON_CLOUD" ]; then
+    read -p "Variable falcon_cloud must be set to one of: us-1, us-2, eu-1, us-gov-1." FALCON_CLOUD
   fi
 fi
 if [[ "$1" == "up" ]]; then
