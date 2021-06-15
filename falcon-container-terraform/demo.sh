@@ -34,7 +34,7 @@ env_up() {
   gcloud services enable containerregistry.googleapis.com
 
   [ -d ~/cloud-gcp ] || (cd "$HOME" && git clone --depth 1 https://github.com/crowdstrike/cloud-gcp)
-  [ -d ~/falcon-container-terraform ] || (ln -s $HOME/cloud-gcp/falcon-container-terraform $HOME/falcon-container-terraform)
+  [ -d ~/falcon-container-terraform ] || (ln -s $HOME/cloud-gcp/container/falcon-container-terraform $HOME/falcon-container-terraform)
   cd ~/falcon-container-terraform
   terraform init
   echo -e "$LB\n"
